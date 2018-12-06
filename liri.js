@@ -1,17 +1,47 @@
 require("dotenv").config();
 const keys = require("keys.js");
 // console.log(keys);
+var axios = require("axios");
 var command = process.argv[2];
 
+// ///////////////////////////////////////////////////////////////////////////////////////
 // BANDS IN TOWN
 var bandsapikey = keys.bandsintown.apikey;
-// var bandsIT = <query url goes here>;
 
+if (command === "concert-this") {
+    var artistname = process.argv[3];
+    var bandsITURL = "https://rest.bandsintown.com/artists/" + artistname + "/events?app_id=" + bandsapikey;
+
+    var venueArray = [];
+    var locArray = [];
+    var dateArray = [];
+
+    axios.get(bandsITURL)
+        .then(function(response) {
+            for (var i = 0; i < (response.data).length; i++) {
+                // name of venue, venue location, date of event as MM/DD/YYYY
+                // console.log(response.data);
+                venueArray.push(response.data[i].venue.name);
+                locArray.push(response.data[i].venue.city + ", " + response.data[i].venue.region);
+                dateArray.push(response.data[i].datetime);
+            }
+            console.log(venueArray);
+            console.log(locArray);
+            console.log(dateArray);
+        })
+        .catch(function(error) {
+            console.log(error);
+        });
+}
+
+// ///////////////////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////////////////////
 // OMDB
 var OMDBapikey = keys.OMDB.apikey;
 var OMDBurl = "http://www.omdbapi.com/?apikey="+ OMDBapikey + "&";
 
-
+// ///////////////////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////////////////////
 // SPOTIFY
 var Spotify = require("node-spotify-api");
 var spotify = new Spotify(keys.spotify);
