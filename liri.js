@@ -38,7 +38,19 @@ if (command === "concert-this") {
 // ///////////////////////////////////////////////////////////////////////////////////////
 // OMDB
 var OMDBapikey = keys.OMDB.apikey;
-var OMDBurl = "http://www.omdbapi.com/?apikey="+ OMDBapikey + "&";
+
+if (command === "movie-this") {
+    var movieQuery = process.argv[3];
+    var OMDBurl = "http://www.omdbapi.com/?apikey="+ OMDBapikey + "&type=movie&t=" + movieQuery;
+    
+    axios.get(OMDBurl)
+    .then(function(response) {
+        console.log(response.data);
+    })
+    .catch(function(error) {
+        console.log(error);
+    });
+}
 
 // ///////////////////////////////////////////////////////////////////////////////////////
 // ///////////////////////////////////////////////////////////////////////////////////////
