@@ -7,6 +7,8 @@ var fs = require("fs");
 // "concert-this", "movie-this", "spotify-this-song", "do-what-it-says"
 var command = process.argv[2];
 var query;
+
+// if there are arguments aside from the command, combine them into one string
 if (process.argv[3]) {
     query = process.argv.slice(3).join(" ");
 }
@@ -16,34 +18,28 @@ if (process.argv[3]) {
 var bandsapikey = keys.bandsintown.apikey;
 
 var bandsCmd = function() {
-    if (typeof query === "undefined") {
+    // if no query is given, set a default query
+    if (!query) {
         query = "Foo Fighters";
     }
 
     var bandsITURL = "https://rest.bandsintown.com/artists/" + query + "/events?app_id=" + bandsapikey;
 
-    var venueArray = [];
-    var locArray = [];
-    var dateArray = [];
-
     axios.get(bandsITURL)
         .then(function(response) {
             for (var i = 0; i < (response.data).length; i++) {
+                // for concerts in the U.S., list city and state
                 if (response.data[i].venue.region) {
                     var tempLoc = response.data[i].venue.city + ", " + response.data[i].venue.region;
+                // otherwise list city and country
                 } else {
                     var tempLoc = response.data[i].venue.city + ", " + response.data[i].venue.country;
                 }
-                venueArray.push(response.data[i].venue.name);
-                
-                locArray.push(tempLoc);
-                dateArray.push(moment(response.data[i].datetime).format("MM/DD/YYYY"));
-            }
-            for (var i = 0; i < venueArray.length; i++) {
+
                 console.log("~~~~~~~~~~~~~~~~~~~~~~~~");
-                console.log("Venue: " + venueArray[i]);
-                console.log("Location: " + locArray[i]);
-                console.log("Date: " + dateArray[i]);
+                console.log("Venue: " + response.data[i].venue.name);
+                console.log("Location: " + tempLoc);
+                console.log("Date: " + moment(response.data[i].datetime).format("MM/DD/YYYY"));
                 console.log("~~~~~~~~~~~~~~~~~~~~~~~~");
             }
         })
@@ -91,7 +87,7 @@ var Spotify = require("node-spotify-api");
 var spotify = new Spotify(keys.spotify);
 
 var spotifyCmd = function() {
-    if (typeof query === "undefined") {
+    if (!query) {
         query = "The Sign Ace of Base";
     }
 
@@ -109,7 +105,7 @@ var spotifyCmd = function() {
         if (spotifyShortCut.preview_url) {
             console.log("Song link: " + "\n" + spotifyShortCut.preview_url);
         } else {
-            console.log("Song link is null");
+            console.log("Song link is not available");
         }
         console.log("~~~~~~~~~~~~~~~");
         console.log("~~~~~~~~~~~~~~~");
