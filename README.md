@@ -20,3 +20,6 @@ Use the list of commands below, replacing the placeholders with your query.
 
 `do-what-it-says`
     * This command reads the file "random.txt" and performs the command in that file
+
+## Demo
+    (https://www.youtube.com/watch?v=8Kucgx2d0TQ)
