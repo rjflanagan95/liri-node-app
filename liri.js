@@ -66,6 +66,8 @@ var omdbCmd = function() {
     
     axios.get(OMDBurl)
     .then(function(response) {
+        console.log("~~~~~~~~~~~~~~~");
+        console.log("~~~~~~~~~~~~~~~");
         console.log("Title: " + response.data.Title);
         console.log("Release Year: " + response.data.Year);
         console.log("IMDB Rating: " + response.data.Ratings[0].Value);
@@ -74,6 +76,8 @@ var omdbCmd = function() {
         console.log("Language: " + response.data.Language);
         console.log("Plot: " + response.data.Plot);
         console.log("Actors: " + response.data.Actors);
+        console.log("~~~~~~~~~~~~~~~");
+        console.log("~~~~~~~~~~~~~~~");
     })
     .catch(function(error) {
         console.log(error);
@@ -126,32 +130,48 @@ var randomCmd = function() {
 
         if (command === "concert-this") {
             bandsCmd();
+            updateLog();
         }
     
         if (command === "movie-this") {
             omdbCmd();
+            updateLog();
         }
     
         if (command === "spotify-this-song") {
             spotifyCmd();
+            updateLog();
         }
     });
 }
 
 // ///////////////////////////////////////////////////////////////////////////////////////
 // ///////////////////////////////////////////////////////////////////////////////////////
+var updateLog = function() {
+    fs.appendFile("log.txt", command + "," + query + "\n", function(err) {
+        if (err) {
+            return console.log(err);
+        }
+        console.log("log.txt was updated");
+    });
+}
+
 if (command === "concert-this") {
     bandsCmd();
+    updateLog();
 }
 
 if (command === "movie-this") {
     omdbCmd();
+    updateLog();
 }
 
 if (command === "spotify-this-song") {
     spotifyCmd();
+    updateLog();
 }
 
 if (command === "do-what-it-says") {
     randomCmd();
+    updateLog();
 }
